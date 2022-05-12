@@ -8,8 +8,10 @@ class Item {
 
 class Shop {
   constructor(items = []) {
-    if (items.constructor === Array) {
+    if (items.constructor === Array && items.length > 0) {
     this.items = items;
+    } else if (items.length === 0) {
+      throw new Error("Inventory can not be empty.")
     } else {
       throw new Error("Inventory should be an array.")
     }

@@ -15,6 +15,10 @@ describe("Gilded Rose", function () {
     it("Shop() expects an array", function () {
       expect(() => new Shop("bar")).to.throw("Inventory should be an array.")
     });
+    it("Shop() expects an array of items", function () {
+      expect(() => new Shop([])).to.throw("Inventory can not be empty.")
+    });
+
 
 
   describe("Inventory operations of non-special items:", () => {
