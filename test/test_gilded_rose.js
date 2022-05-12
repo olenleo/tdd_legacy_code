@@ -12,6 +12,9 @@ describe("Gilded Rose", function () {
       const items = gildedRose.updateQuality();
       expect(items[0].name).to.equal("foo");
     });
+    it("should bar", function () {
+      expect(() => new Shop("bar")).to.throw("Inventory should be an array.")
+    });
 
 
   describe("Inventory operations of non-special items:", () => {
@@ -78,8 +81,9 @@ describe("Gilded Rose", function () {
       beforeEach(() => {
         let specialItems = [
           new Item("Aged Brie", 20, 25),
-          new Item("Backstage passes to a TAFKAL80ETC concert", 25, 10),
-          new Item("Sulfuras, Hand of Ragnaros", 5, 80)
+          new Item("Backstage passes to a TAFKAL80ETC concert", 25, 25),
+          new Item("Sulfuras, Hand of Ragnaros", 5, 80),
+          new Item("Backstage passes to a TAFKAL80ETC concert", 25, 50)
         ]
         
         gildedRose = new Shop(specialItems)
@@ -131,7 +135,10 @@ describe("Gilded Rose", function () {
         console.log('quality', inventory[1].quality, 'start ', qualityOfBackstagePass, 'days', inventory[1].sellIn)
         expect(inventory[1].quality).to.equal(qualityOfBackstagePass + 25)
         })
-
+        it("Backstage pass quality can not exceed 50", () => {
+          updateTimes(25)
+          expect(inventory[3].quality).to.equal(50)
+        })
         it("Backstage pass quality set to 0 when sellIn === 0", () => {
           updateTimes(inventory[1].sellIn + 1)
           expect(inventory[1].quality).to.equal(0)

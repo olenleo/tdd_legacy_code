@@ -8,7 +8,11 @@ class Item {
 
 class Shop {
   constructor(items = []) {
+    if (items.constructor === Array) {
     this.items = items;
+    } else {
+      throw new Error("Inventory should be an array.")
+    }
   }
 
   updateQuality() {
