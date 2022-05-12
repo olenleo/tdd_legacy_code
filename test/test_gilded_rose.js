@@ -12,6 +12,9 @@ describe("Gilded Rose", function () {
       const items = gildedRose.updateQuality();
       expect(items[0].name).to.equal("foo");
     });
+    it("Shop() with no parameters return an error", ()  => {
+      expect(() => new Shop()).to.throw("Inventory can not be empty.")
+    })
     it("Shop() expects an array", function () {
       expect(() => new Shop("bar")).to.throw("Inventory should be an array.")
     });

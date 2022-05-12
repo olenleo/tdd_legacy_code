@@ -7,7 +7,6 @@ class Item {
 }
 
 function checkValidityOfItems( items ) {
-  console.log('Recieved ', items)
   if (items.constructor !== Array) {
     return ("Inventory should be an array.")
   }
