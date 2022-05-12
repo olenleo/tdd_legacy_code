@@ -7,12 +7,12 @@ describe("Gilded Rose", function () {
  
 
 
-    it("should foo", function () {
-      const gildedRose = new Shop([new Item("foo", 0, 0)]);
+    it("Shop contains provided item", function () {
+      gildedRose = new Shop([new Item("foo", 0, 0)]);
       const items = gildedRose.updateQuality();
       expect(items[0].name).to.equal("foo");
     });
-    it("should bar", function () {
+    it("Shop() expects an array", function () {
       expect(() => new Shop("bar")).to.throw("Inventory should be an array.")
     });
 
@@ -108,6 +108,11 @@ describe("Gilded Rose", function () {
             expect(item.sellIn).to.equal(5)
           }
         }
+      });
+      it("Legendary item \'Hand of Ragnaros'\ is not affected by update() pt 2", () => {
+        updateTimes(500);
+        expect(inventory[2].quality).to.equal(80)
+        expect(inventory[2].sellIn).to.equal(5)
       });
 
       describe("Backstage passes", () => {
