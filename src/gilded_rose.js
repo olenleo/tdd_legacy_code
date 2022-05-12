@@ -6,16 +6,33 @@ class Item {
   }
 }
 
-class Shop {
-  constructor(items = []) {
-    if (items.constructor === Array && items.length > 0) {
-    this.items = items;
-    } else if (items.length === 0) {
-      throw new Error("Inventory can not be empty.")
-    } else {
-      throw new Error("Inventory should be an array.")
+function checkValidityOfItems( items ) {
+  console.log('Recieved ', items)
+  if (items.constructor !== Array) {
+    return ("Inventory should be an array.")
+  }
+  if (items.length === 0) {
+    return ("Inventory can not be empty.")
+  }
+  for (let item in items) {
+    if (items[item].constructor !== Item) {
+      return ("Inventory contains invalid object.")
     }
   }
+  return true;
+}
+
+class Shop {
+  constructor(items = []) {
+    if (checkValidityOfItems(items) === true) {
+      this.items = items;
+    } else {
+      throw new Error(checkValidityOfItems(items))
+    }
+  }
+
+  
+  
 
   updateQuality() {
     for (var i = 0; i < this.items.length; i++) {
