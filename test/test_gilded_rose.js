@@ -4,7 +4,11 @@ var { Shop, Item } = require("../src/gilded_rose.js");
 describe("Gilded Rose", function () {
   let gildedRose;
   let inventory;
- 
+  const specialInventoryItems = [
+    "Aged Brie",
+    "Backstage passes to a TAFKAL80ETC concert",
+    "Sulfuras, Hand of Ragnaros"
+  ]
 
 
     it("Shop contains provided item", function () {
@@ -41,6 +45,7 @@ describe("Gilded Rose", function () {
       inventory = gildedRose.items;
       //printItems()
     });
+
     describe("Quality changes with update()", () => {
       it("Quality of item decreases by one when updated if quality > 0", () => {
         const currentQuality = inventory[0].quality
@@ -89,17 +94,41 @@ describe("Gilded Rose", function () {
     });
 
     describe("Inventory operations of special items:", () => {
+      let backStagePassShop;
       beforeEach(() => {
         let specialItems = [
           new Item("Aged Brie", 20, 25),
-          new Item("Backstage passes to a TAFKAL80ETC concert", 25, 25),
-          new Item("Sulfuras, Hand of Ragnaros", 5, 80),
-          new Item("Backstage passes to a TAFKAL80ETC concert", 25, 50)
+          new Item("Backstage passes to a TAFKAL80ETC concert", 25, 40),
+          new Item("Sulfuras, Hand of Ragnaros", 5, 50)
         ]
-        
+        backStagePassShop = new Shop([new Item("Backstage passes to a TAFKAL80ETC concert", 8, 10)]);
         gildedRose = new Shop(specialItems)
         inventory = gildedRose.items;
+        
+      });    
+      
+      describe("Name of item is tested to check if it belongs to the special items", () => {
+        it("Aged Brie is tested", () => {
+          const before = inventory[0].quality
+          updateTimes(5);
+          for (let item in inventory) {
+            if (inventory[item].name === "Aged Brie") {
+              expect(inventory[item].quality).to.equal(before + 5)
+            }
+          }
+
+        })
+        it("Backstage pass is tested", () => {
+          const before = inventory[1].quality
+          updateTimes(5);
+          for (let item in inventory) {
+            if (inventory[item].name === "Backstage passes to a TAFKAL80ETC concert") {
+              expect(inventory[item].quality).to.equal(before + 5)
+            }
+          }
+        })
       });
+      
       it("Quality of \'Aged Brie\' increases with each update", () => {
         const qualityOfCheeseAtStart = inventory[0].quality;
         updateTimes(5)
@@ -108,52 +137,67 @@ describe("Gilded Rose", function () {
 
       it("Quality of \'Aged Brie\' can not exceed 50", () => {
         updateTimes(500);
-        expect(inventory[0].quality).to.equal(50);
+        for (let item in inventory) {
+          if (item.name === "Aged Brie") {
+            expect(item.quality).to.equal(50)     
+          }
+        }
       })
       
       it("Legendary item \'Hand of Ragnaros'\ is not affected by update()", () => {
         updateTimes(500);
         for (let item in inventory) {
-          if (item.name === "Sulfuras, Hand of Ragnaros") {
-            expect(item.quality).to.equal(80)     
-            expect(item.sellIn).to.equal(5)
+          if (inventory[item].name === "Sulfuras, Hand of Ragnaros") {
+            expect(inventory[item].quality).to.equal(50)     
+            expect(inventory[item].sellIn).to.equal(5)
           }
         }
       });
       it("Legendary item \'Hand of Ragnaros'\ is not affected by update() pt 2", () => {
         updateTimes(500);
-        expect(inventory[2].quality).to.equal(80)
+        expect(inventory[2].quality).to.equal(50)
         expect(inventory[2].sellIn).to.equal(5)
       });
 
+      it("Quality of \'Aged Brie\' or \'Backstage pass\' can not exceed 50", () => {
+        let shop = new Shop([new Item("Backstage passes to a TAFKAL80ETC concert", 5,49), new Item("Aged Brie",5,49)])
+        shop.updateQuality()
+        for (const item in shop.items) {
+          expect(shop.items[item].quality).to.equal(50)
+        }
+      
+
+      })
+
       describe("Backstage passes", () => {
         it("Backstage pass quality increases by 1 before sellIn <= 10", () => {
-          const qualityOfBackstagePass = inventory[1].quality;
-          updateTimes(5)
-          expect(inventory[1].quality).to.equal(qualityOfBackstagePass + 5)
+          let shop = new Shop([new Item("Backstage passes to a TAFKAL80ETC concert", 11, 10),new Item("Backstage passes to a TAFKAL80ETC concert", 5, 10)])
+          shop.updateQuality()
+          expect(shop.items[0].quality).to.equal(11)
+          expect(shop.items[1].quality).to.equal(13)
         })
 
         it("Backstage pass quality increases by 2 when 5 < sellIn <= 10", () => {
-          const qualityOfBackstagePass = inventory[1].quality;
-          updateTimes(11)
-          expect(inventory[1].quality).to.equal(qualityOfBackstagePass + 11)
-          updateTimes(1)
-          expect(inventory[1].quality).to.equal(qualityOfBackstagePass + 12)
+          const quality = backStagePassShop.items[0].quality
+          backStagePassShop.updateQuality()          
+          expect(backStagePassShop.items[0].quality).to.equal(quality + 2)
         })
 
         it("Backstage pass quality increases by 3 when 0 < sellIn < 5", () => {
-        const qualityOfBackstagePass = inventory[1].quality;
-        console.log('quality', inventory[1].quality, 'start ', qualityOfBackstagePass, 'days', inventory[1].sellIn)
         updateTimes(15)
-        console.log('quality', inventory[1].quality, 'start ', qualityOfBackstagePass, 'days', inventory[1].sellIn)
-        expect(inventory[1].quality).to.equal(qualityOfBackstagePass +15)
+        expect(inventory[1].quality).to.equal(50)
         updateTimes(5)
-        console.log('quality', inventory[1].quality, 'start ', qualityOfBackstagePass, 'days', inventory[1].sellIn)
-        expect(inventory[1].quality).to.equal(qualityOfBackstagePass + 25)
+        expect(inventory[1].quality).to.equal(50)
         })
+
         it("Backstage pass quality can not exceed 50", () => {
-          updateTimes(25)
-          expect(inventory[3].quality).to.equal(50)
+          updateTimes(23)
+          for (let item in inventory) {
+            if (inventory[item].name === "Backstage passes to a TAFKAL80ETC concert") {
+              expect(inventory[item].quality).to.equal(50)     
+            }
+          }
+          
         })
         it("Backstage pass quality set to 0 when sellIn === 0", () => {
           updateTimes(inventory[1].sellIn + 1)
