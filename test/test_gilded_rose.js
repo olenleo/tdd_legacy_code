@@ -110,12 +110,17 @@ describe("Gilded Rose", function () {
         
       });    
       
-    
-      
       it("Quality of \'Aged Brie\' increases with each update", () => {
-        const qualityOfCheeseAtStart = inventory[0].quality;
-        updateTimes(5, gildedRose)
-        expect(inventory[0].quality).to.equal(qualityOfCheeseAtStart + 5)
+        let shop = new Shop([new Item("Aged Brie", 5,20)])
+        const qualityOfCheeseAtStart = shop.items[0].quality;
+        updateTimes(5, shop)
+        expect(shop.items[0].quality).to.equal(qualityOfCheeseAtStart + 5)
+      })
+      it("Quality of \'Aged Brie\' increases 2x when sellIn < 0", () => {
+        let shop = new Shop([new Item("Aged Brie",-5,20)])
+        const qualityOfCheeseAtStart = shop.items[0].quality;
+        updateTimes(5, shop)
+        expect(shop.items[0].quality).to.equal(qualityOfCheeseAtStart + 10)
       })
 
       it("Quality of \'Aged Brie\' can not exceed 50", () => {
@@ -158,6 +163,18 @@ describe("Gilded Rose", function () {
           shop.updateQuality()
           expect(shop.items[0].quality).to.equal(11)
           expect(shop.items[1].quality).to.equal(13)
+        })
+
+        it("Quality of other items is unaffected by \'Backstage pass\' special rules ", () => {
+          let shop = new Shop([
+            new Item("Backstage passes to a TAFKAL80ETC concert", 11, 10),
+            new Item("Aged Brie", 5, 10),
+            new Item("Sulfuras, Hand of Ragnaros", 50, 10)
+          ])
+          shop.updateQuality();
+          expect(shop.items[0].quality).to.equal(11)
+          expect(shop.items[1].quality).to.equal(11)
+          expect(shop.items[2].quality).to.equal(10)
         })
 
         it("Backstage pass quality increases by 2 when 5 < sellIn <= 10", () => {
