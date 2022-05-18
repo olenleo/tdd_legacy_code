@@ -54,34 +54,34 @@ describe("Gilded Rose", function () {
       })
 
       it("Quality can not reach below 0", () => {
-        updateTimes(5)
+        updateTimes(5, gildedRose)
         expect(inventory[2].quality).to.equal(0);
       })
 
       it("Quality of item A decreases even if item B reaches 0", () => {
         const currentQuality = inventory[1].quality
-        updateTimes(10)
+        updateTimes(10, gildedRose)
         expect(inventory[1].quality).to.equal(currentQuality - 10);
       })
 
-      
+        
 
   });
     describe("sellIn (days to sell) changes with update()", () => {
       it("Item sellIn decreases when updated", () => {
         const currentSellIn = inventory[0].sellIn
-        updateTimes(1)
+        updateTimes(1, gildedRose)
         expect(inventory[0].sellIn).to.equal(currentSellIn - 1);
       })
       it("Item sellIn can be negative", () => {
         const currentSellIn = inventory[0].sellIn;
-        updateTimes(6)
+        updateTimes(6, gildedRose)
         expect(inventory[0].sellIn).to.equal(currentSellIn - 6);
       })
       it("update() decreases sellIn of all items", () => {
         const sellInOfItemA = inventory[0].sellIn;
         const sellInOfItemB = inventory[1].sellIn;
-        updateTimes(5)
+        updateTimes(5, gildedRose)
         expect(inventory[0].sellIn).to.be.lessThan(sellInOfItemA)
         expect(inventory[1].sellIn).to.be.lessThan(sellInOfItemB)
       })
@@ -89,9 +89,9 @@ describe("Gilded Rose", function () {
     describe("Quality and sellIn affect each other:", () => {
 
       it("Quality decreases at double speed if sellIn is negative", () => {
-        updateTimes(10)
+        updateTimes(10,gildedRose)
         expect(inventory[0].quality).to.equal(35)
-        updateTimes(1)
+        updateTimes(1, gildedRose)
         expect(inventory[0].quality).to.equal(33)
       })
     });
@@ -104,42 +104,22 @@ describe("Gilded Rose", function () {
           new Item("Backstage passes to a TAFKAL80ETC concert", 25, 40),
           new Item("Sulfuras, Hand of Ragnaros", 5, 50)
         ]
-        backStagePassShop = new Shop([new Item("Backstage passes to a TAFKAL80ETC concert", 8, 10)]);
+        
         gildedRose = new Shop(specialItems)
         inventory = gildedRose.items;
         
       });    
       
-      describe("Name of item is tested to check if it belongs to the special items", () => {
-        it("Aged Brie is tested", () => {
-          const before = inventory[0].quality
-          updateTimes(5);
-          for (let item in inventory) {
-            if (inventory[item].name === "Aged Brie") {
-              expect(inventory[item].quality).to.equal(before + 5)
-            }
-          }
-
-        })
-        it("Backstage pass is tested", () => {
-          const before = inventory[1].quality
-          updateTimes(5);
-          for (let item in inventory) {
-            if (inventory[item].name === "Backstage passes to a TAFKAL80ETC concert") {
-              expect(inventory[item].quality).to.equal(before + 5)
-            }
-          }
-        })
-      });
+    
       
       it("Quality of \'Aged Brie\' increases with each update", () => {
         const qualityOfCheeseAtStart = inventory[0].quality;
-        updateTimes(5)
+        updateTimes(5, gildedRose)
         expect(inventory[0].quality).to.equal(qualityOfCheeseAtStart + 5)
       })
 
       it("Quality of \'Aged Brie\' can not exceed 50", () => {
-        updateTimes(500);
+        updateTimes(500, gildedRose);
         for (let item in inventory) {
           if (item.name === "Aged Brie") {
             expect(item.quality).to.equal(50)     
@@ -148,7 +128,7 @@ describe("Gilded Rose", function () {
       })
       
       it("Legendary item \'Hand of Ragnaros'\ is not affected by update()", () => {
-        updateTimes(500);
+        updateTimes(500, gildedRose);
         for (let item in inventory) {
           if (inventory[item].name === "Sulfuras, Hand of Ragnaros") {
             expect(inventory[item].quality).to.equal(50)     
@@ -157,7 +137,7 @@ describe("Gilded Rose", function () {
         }
       });
       it("Legendary item \'Hand of Ragnaros'\ is not affected by update() pt 2", () => {
-        updateTimes(500);
+        updateTimes(500,gildedRose);
         expect(inventory[2].quality).to.equal(50)
         expect(inventory[2].sellIn).to.equal(5)
       });
@@ -181,21 +161,22 @@ describe("Gilded Rose", function () {
         })
 
         it("Backstage pass quality increases by 2 when 5 < sellIn <= 10", () => {
+          backStagePassShop = new Shop([new Item("Backstage passes to a TAFKAL80ETC concert", 8, 10)]);
           const quality = backStagePassShop.items[0].quality
           backStagePassShop.updateQuality()          
           expect(backStagePassShop.items[0].quality).to.equal(quality + 2)
         })
 
         it("Backstage pass quality increases by 3 when 0 < sellIn < 5", () => {
-        let shop = new Shop([new Item("Backstage passes to a TAFKAL80ETC concert", 6, 10)])
-        shop.updateQuality()
-        expect(shop.items[0].quality).to.equal(12)
-        shop.updateQuality()
-        expect(shop.items[0].quality).to.equal(15)
+          backStagePassShop = new Shop([new Item("Backstage passes to a TAFKAL80ETC concert", 6, 10)])
+          backStagePassShop.updateQuality()
+          expect(backStagePassShop.items[0].quality).to.equal(12)
+          backStagePassShop.updateQuality()
+          expect(backStagePassShop.items[0].quality).to.equal(15)
         })
 
         it("Backstage pass quality can not exceed 50", () => {
-          updateTimes(23)
+          updateTimes(23, gildedRose)
           for (let item in inventory) {
             if (inventory[item].name === "Backstage passes to a TAFKAL80ETC concert") {
               expect(inventory[item].quality).to.equal(50)     
@@ -204,7 +185,7 @@ describe("Gilded Rose", function () {
           
         })
         it("Backstage pass quality set to 0 when sellIn === 0", () => {
-          updateTimes(inventory[1].sellIn + 1)
+          updateTimes(inventory[1].sellIn + 1, gildedRose)
           expect(inventory[1].quality).to.equal(0)
           })
       })
@@ -218,9 +199,9 @@ describe("Gilded Rose", function () {
     }
     console.log('______________________________________________________________\n')
   }
-  function updateTimes(n) {
-    for (let i = 0; i < n; i++) {
-      gildedRose.updateQuality()
+  function updateTimes(times, shop) {
+    for (let i = 0; i < times; i++) {
+      shop.updateQuality()
     }
   }
 });
