@@ -63,6 +63,9 @@ describe("Gilded Rose", function () {
         updateTimes(10)
         expect(inventory[1].quality).to.equal(currentQuality - 10);
       })
+
+      
+
   });
     describe("sellIn (days to sell) changes with update()", () => {
       it("Item sellIn decreases when updated", () => {
@@ -184,10 +187,11 @@ describe("Gilded Rose", function () {
         })
 
         it("Backstage pass quality increases by 3 when 0 < sellIn < 5", () => {
-        updateTimes(15)
-        expect(inventory[1].quality).to.equal(50)
-        updateTimes(5)
-        expect(inventory[1].quality).to.equal(50)
+        let shop = new Shop([new Item("Backstage passes to a TAFKAL80ETC concert", 6, 10)])
+        shop.updateQuality()
+        expect(shop.items[0].quality).to.equal(12)
+        shop.updateQuality()
+        expect(shop.items[0].quality).to.equal(15)
         })
 
         it("Backstage pass quality can not exceed 50", () => {
