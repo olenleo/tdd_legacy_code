@@ -60,7 +60,7 @@ doThing( item ) {
   }
 */
 reduceQuality( indexOfItem ) {
-  if (this.items[indexOfItem].name === ("Sulfuras, Hand of Ragnaros" || "Aged Brie" ||  "Backstage passes to a TAFKAL80ETC")) {
+  if (this.items[indexOfItem].name === ("Sulfuras, Hand of Ragnaros")) {
     return;
   }
   if (this.items[indexOfItem].quality - 1 >= 0) {
