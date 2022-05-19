@@ -30,35 +30,6 @@ class Shop {
     }
   }
 
-  /*
-doThing( item ) {
-    switch(item.name) {
-      case "Aged Brie":
-        item.quality += 1;
-        break;
-      case "Backstage passes to a TAFKAL80ETC concert":
-        break;
-      case "Sulfuras, Hand of Ragnaros":
-
-        break;
-      case "Conjured":
-        break;
-      default:
-        
-    } 
-  }
-  updateAgedBrie (item) {
-    if (item.sellIn >= 0) {
-      item.quality++;
-    } else {
-      item.quality++;
-    }
-    if (item.quality > 50) {
-      item.quality = 50;
-    }
-    
-  }
-*/
 reduceQuality( indexOfItem ) {
   if (this.items[indexOfItem].name === ("Sulfuras, Hand of Ragnaros")) {
     return;
@@ -83,11 +54,20 @@ qualityShouldNotDecrease( indexOfItem ) {
  * @param {*} indexOfItem 
  */
 increaseQuality( indexOfItem ) {
-  if (this.items[indexOfItem].quality + 1 <= 50) {
-    this.items[indexOfItem].quality++;
+    if (this.items[indexOfItem].quality + 1 <= 50) {
+      this.items[indexOfItem].quality++;
   }
-
 }
+
+incrementBackstagePassQuality( indexOfItem ) {
+  if (this.items[indexOfItem].name == "Backstage passes to a TAFKAL80ETC concert") {
+  if (this.items[indexOfItem].sellIn < 11) {
+    this.increaseQuality(indexOfItem);
+  }
+  if (this.items[indexOfItem].sellIn < 6) {
+    this.increaseQuality(indexOfItem);
+  }
+}}
 
 
   updateQuality() {
@@ -96,14 +76,7 @@ increaseQuality( indexOfItem ) {
             this.reduceQuality(i)
       } else {
           this.increaseQuality(i)
-          if (this.items[i].name == "Backstage passes to a TAFKAL80ETC concert") {
-            if (this.items[i].sellIn < 11) {
-                this.increaseQuality(i)
-            }
-            if (this.items[i].sellIn < 6) {
-                this.increaseQuality(i)
-            }
-          }
+            this.incrementBackstagePassQuality(i)
       }
       this.reduceSellIn(i)
       if (this.items[i].sellIn < 0) {
