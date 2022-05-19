@@ -34,8 +34,15 @@ reduceQuality( indexOfItem ) {
   if (this.items[indexOfItem].name === ("Sulfuras, Hand of Ragnaros")) {
     return;
   }
+  
   if (this.items[indexOfItem].quality - 1 >= 0) {
   this.items[indexOfItem].quality--;
+  }
+}
+
+reduceConjuredQuality( indexOfItem ) {
+  if (this.items[indexOfItem].name.includes("Conjured")) {
+    this.reduceQuality(indexOfItem);
   }
 }
 
@@ -74,9 +81,10 @@ incrementBackstagePassQuality( indexOfItem ) {
     for (var i = 0; i < this.items.length; i++) {
       if (this.qualityShouldNotDecrease(i)) {
             this.reduceQuality(i)
+            this.reduceConjuredQuality(i);
       } else {
           this.increaseQuality(i)
-            this.incrementBackstagePassQuality(i)
+          this.incrementBackstagePassQuality(i)
       }
       this.reduceSellIn(i)
       if (this.items[i].sellIn < 0) {

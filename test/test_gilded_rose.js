@@ -218,14 +218,21 @@ describe("Gilded Rose", function () {
       })
     });
   });
-  function printItems() {
-    console.log('\nItems\n______________________________________________________________')
-    
-    for (let item in gildedRose.items) {
-      console.log(gildedRose.items[item])
-    }
-    console.log('______________________________________________________________\n')
-  }
+
+  describe("Conjured items", () => {
+    beforeEach(() => {
+      let conjuredItems =  [
+        new Item("Conjured", 10, 10)
+      ]
+      
+      gildedRose = new Shop(conjuredItems);
+      inventory = gildedRose.items;
+    });
+    it("Quality of conjured items decreases at 2x rate", () => {
+      gildedRose.updateQuality();
+      expect(inventory[0].quality).to.equal(8)
+    })
+  });
   function updateTimes(times, shop) {
     for (let i = 0; i < times; i++) {
       shop.updateQuality()
