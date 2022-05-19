@@ -129,6 +129,14 @@ describe("Gilded Rose", function () {
           }
         }
       })
+      it("Quality of \'Aged Brie\' with negative SellIn can not exceed 50", () => {
+        let shop = new Shop([new Item("Aged Brie", -5,49)])
+        shop.updateQuality()
+        expect(shop.items[0].quality).to.equal(50);
+        shop.updateQuality()
+        expect(shop.items[0].quality).to.equal(50);
+
+      })
       
       it("Legendary item \'Hand of Ragnaros'\ is not affected by update()", () => {
         let shop = new Shop([new Item("Sulfuras, Hand of Ragnaros", 5,20), new Item("Wings of Spit", 5, 20)])
