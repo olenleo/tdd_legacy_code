@@ -60,7 +60,7 @@ doThing( item ) {
   }
 */
 reduceQuality( indexOfItem ) {
-  if (this.items[indexOfItem].name === "Sulfuras, Hand of Ragnaros") {
+  if (this.items[indexOfItem].name === ("Sulfuras, Hand of Ragnaros" || "Aged Brie" ||  "Backstage passes to a TAFKAL80ETC")) {
     return;
   }
   if (this.items[indexOfItem].quality - 1 >= 0) {
@@ -73,6 +73,10 @@ reduceSellIn( indexOfItem ) {
   this.items[indexOfItem].sellIn--;
   }
 }
+qualityShouldNotDecrease( indexOfItem ) {
+  return (this.items[indexOfItem].name !== "Aged Brie" && this.items[indexOfItem].name !== "Backstage passes to a TAFKAL80ETC concert")
+}
+
 
 /**
  * Quality of items capped at 50.
@@ -88,7 +92,7 @@ increaseQuality( indexOfItem ) {
 
   updateQuality() {
     for (var i = 0; i < this.items.length; i++) {
-      if (this.items[i].name != "Aged Brie" && this.items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
+      if (this.qualityShouldNotDecrease(i)) {
             this.reduceQuality(i)
       } else {
           this.increaseQuality(i)
