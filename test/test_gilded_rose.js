@@ -64,8 +64,6 @@ describe("Gilded Rose", function () {
         expect(inventory[1].quality).to.equal(currentQuality - 10);
       })
 
-        
-
   });
     describe("sellIn (days to sell) changes with update()", () => {
       it("Item sellIn decreases when updated", () => {
@@ -133,13 +131,10 @@ describe("Gilded Rose", function () {
       })
       
       it("Legendary item \'Hand of Ragnaros'\ is not affected by update()", () => {
-        updateTimes(500, gildedRose);
-        for (let item in inventory) {
-          if (inventory[item].name === "Sulfuras, Hand of Ragnaros") {
-            expect(inventory[item].quality).to.equal(50)     
-            expect(inventory[item].sellIn).to.equal(5)
-          }
-        }
+        let shop = new Shop([new Item("Sulfuras, Hand of Ragnaros", 5,20), new Item("Wings of Spit", 5, 20)])
+        updateTimes(20, shop);
+        expect(shop.items[0].quality).to.equal(20)
+        expect(shop.items[1].quality).to.equal(0)
       });
       it("Legendary item \'Hand of Ragnaros'\ is not affected by update() pt 2", () => {
         updateTimes(500,gildedRose);
@@ -154,6 +149,13 @@ describe("Gilded Rose", function () {
           expect(shop.items[item].quality).to.equal(50)
         }
       
+
+      })
+
+      it("Sulfuras\' quality does not decrease after expiry date", () => {
+        let shop = new Shop([new Item("Sulfuras, Hand of Ragnaros", -3,3)])
+        shop.updateQuality()
+        expect(shop.items[0].quality).to.equal(3)
 
       })
 
