@@ -71,6 +71,17 @@ reduceSellIn( indexOfItem ) {
   }
 }
 
+/**
+ * Quality of items capped at 50.
+ * @param {*} indexOfItem 
+ */
+increaseQuality( indexOfItem ) {
+  if (this.items[indexOfItem].quality + 1 <= 50) {
+    this.items[indexOfItem].quality++;
+  }
+
+}
+
 
   updateQuality() {
     for (var i = 0; i < this.items.length; i++) {
@@ -81,17 +92,13 @@ reduceSellIn( indexOfItem ) {
         }
       } else {
         if (this.items[i].quality < 50) {
-          this.items[i].quality = this.items[i].quality + 1;
+          this.increaseQuality(i)
           if (this.items[i].name == "Backstage passes to a TAFKAL80ETC concert") {
             if (this.items[i].sellIn < 11) {
-              if (this.items[i].quality < 50) {     
-                this.items[i].quality = this.items[i].quality + 1;
-              }
+                this.increaseQuality(i)
             }
             if (this.items[i].sellIn < 6) {
-              if (this.items[i].quality < 50) { // <--
-                this.items[i].quality = this.items[i].quality + 1;
-              }
+                this.increaseQuality(i)
             }
           }
         }
@@ -104,12 +111,10 @@ reduceSellIn( indexOfItem ) {
                 this.reduceQuality( i ) 
             }
           } else {
-            this.items[i].quality = 0;
+            this.items[i].quality = 0; // Backstage pass is expired
           }
         } else {
-          if (this.items[i].quality < 50) {
-            this.items[i].quality = this.items[i].quality + 1;
-          }
+            this.increaseQuality(i)
         }
       }
     }
